@@ -1,2 +1,10 @@
-toto est ici
-tata est là
+Bonjour, ceci est un test de pipex.
+Ce fichier contient plusieurs lignes.
+Certaines lignes contiennent des nombres : 42, 1337, 2025.
+D'autres lignes sont répétées.
+D'autres lignes sont répétées.
+On peut aussi tester la redirection avec grep, wc, tr, etc.
+error: ceci est un message d'erreur simulé.
+
+
+coucou
