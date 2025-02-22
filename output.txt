@@ -1,10 +1,10 @@
-Bonjour, ceci est un test de pipex.
-Ce fichier contient plusieurs lignes.
-Certaines lignes contiennent des nombres : 42, 1337, 2025.
-D'autres lignes sont répétées.
-D'autres lignes sont répétées.
-On peut aussi tester la redirection avec grep, wc, tr, etc.
-error: ceci est un message d'erreur simulé.
-
-
-coucou
+total 116
+drwxr-xr-x 6 tsaby tsaby  4096 Feb 21 15:13 Libft
+-rw-r--r-- 1 tsaby tsaby  1730 Feb 21 10:31 Makefile
+-rw-r--r-- 1 tsaby tsaby   215 Feb 21 10:31 README.md
+drwxr-xr-x 2 tsaby tsaby  4096 Feb 21 10:31 include
+-rw-r--r-- 1 tsaby tsaby   346 Feb 22 11:21 input.txt
+drwxr-xr-x 2 tsaby tsaby  4096 Feb 22 11:58 objs
+-rwxr-xr-x 1 tsaby tsaby     0 Feb 22 11:58 output.txt
+-rwxr-xr-x 1 tsaby tsaby 89704 Feb 22 11:58 pipex
+drwxr-xr-x 2 tsaby tsaby  4096 Feb 21 10:31 sources

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:14:18 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/21 11:43:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/02/22 13:35:49 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_pipex
 
 int		error(const char *str);
 void	free_tab(char **tab);
-
+void	close_fds(t_pipex *pipou);
 int		open_input(char *file1);
 int		open_output(char *file2);
 
