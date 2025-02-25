@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2025/02/23 17:34:15 by tsaby            ###   ########.fr        #
+#    Updated: 2025/02/24 23:22:38 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ OBJS_B		:=	$(SRCS_BONUS:%.c=$(OBJS_B_D)%.o)
 
 HEAD		:=	include/pipex.h	\
 
-HEAD_BONUS	:=	include/pipex_bonus.h	\
+HEAD_BONUS	:=	include/pipex_bonus.h \
 
 HEAD_D		:=	.
 

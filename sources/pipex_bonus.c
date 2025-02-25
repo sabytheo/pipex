@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:38:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/23 16:28:44 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/02/25 17:45:44 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,42 +80,60 @@ void	exec_cmd(char *cmd, char **envp)
 	error("Error !\n execve");
 }
 
-void	pipex(t_pipex *pipou, char **argv, char **envp)
+void pipex(t_pipex *pipou, char **argv, char **envp)
 {
-	pid_t	pid;
-	char	*cmd1;
-	char	*cmd2;
+    int i;
+    pid_t pid[pipou->count_pipe + 1];
+    int fd_pipes[pipou->count_pipe][2];
+    int j;
 
-	cmd1 =  argv[2];
-	cmd2 =  argv[3];
-	if (pipe(pipou->fd) < 0)
-	{
-		close_fds(pipou);
-		error("Error !\n Pipe");
-	}
-	pid = fork();
-	if (pid < 0)
-	{
-		close_fds(pipou);
-		error("Error !\n Fork");
-	}
-	if (pid == 0)
-	{
-		close(pipou->fd[0]);
-		dup2(pipou->in_fd, STDIN_FILENO);
-		dup2(pipou->fd[1], STDOUT_FILENO);
-		exec_cmd(cmd1, envp);
-	}
-	else
-	{
-		close(pipou->fd[1]);
-		dup2(pipou->fd[0], STDIN_FILENO);
-		dup2(pipou->out_fd, STDOUT_FILENO);
-		exec_cmd(cmd2, envp);
-	}
-	close_fds(pipou);
-	waitpid(pid, NULL, 0);
+    i = 0;
+    while (i < pipou->count_pipe)
+        if (pipe(fd_pipes[i++]) == -1)
+            error("Error !\n Pipes ");
+    i = -1;
+    while (++i < pipou->count_pipe)
+    {
+        pid[i] = fork();
+        if (pid[i] < 0)
+            error("Error !\n Fork");
+        if (pid[i] == 0)
+        {
+            j = 0;
+            while (j < pipou->count_pipe)
+            {
+                if (i != j)
+                    close(fd_pipes[j][0]);
+                if (i + 1 != j)
+                    close(fd_pipes[j++][1]);
+            }
+            if (i == 0)
+                dup2(pipou->in_fd, STDIN_FILENO);
+            else
+                dup2(fd_pipes[i - 1][0], STDIN_FILENO);
+            if (i == pipou->count_pipe - 1)
+                dup2(pipou->out_fd, STDOUT_FILENO);
+            else
+                dup2(fd_pipes[i][1], STDOUT_FILENO);
+            exec_cmd(pipou->cmd[i], envp);
+        }
+    }
+    j = 0;
+    while (j < pipou->count_pipe)
+    {
+        close(fd_pipes[j][0]);
+        close(fd_pipes[j++][1]);
+    }
+    i = 0;
+    while (i < pipou->count_pipe)
+        waitpid(pid[i++], NULL, 0);
+    dup2(fd_pipes[pipou->count_pipe - 1][0], STDIN_FILENO);
+    dup2(pipou->out_fd, STDOUT_FILENO);
+    exec_cmd(pipou->cmd[pipou->count_pipe], envp);
+    close(fd_pipes[0][1]);
+    close(fd_pipes[pipou->count_pipe - 1][0]);
 }
+
 
 int	main(int argc, char **argv, char **envp)
 {

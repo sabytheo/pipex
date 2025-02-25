@@ -6,24 +6,24 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:38:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/22 13:29:53 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/02/25 14:17:12 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+
 char	*find_path(char *arg, char **envp)
 {
 	char	**path_arg;
 	char	*path;
-	char 	*temp;
+	char	*temp;
 	int		i;
 
 	i = 0;
-	while (envp[i] && (ft_strncmp(envp[i], "PATH=", 5) != 0))
-		i++;
-	if(!envp[i])
-		return(NULL);
+	while (envp[i++] && (ft_strncmp(envp[i], "PATH=", 5) != 0))
+		if (!envp[i])
+			return (NULL);
 	path_arg = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (path_arg[i])
@@ -31,8 +31,8 @@ char	*find_path(char *arg, char **envp)
 		temp = ft_strjoin(path_arg[i], "/");
 		if (!temp)
 		{
-    		free_tab(path_arg);
-    		return (NULL);
+			free_tab(path_arg);
+			return (NULL);
 		}
 		path = ft_strjoin(temp, arg);
 		free(temp);
@@ -50,10 +50,10 @@ char	*find_path(char *arg, char **envp)
 void	init_struct(t_pipex *pipou, char **argv)
 {
 	pipou->in_fd = open_input(argv[1]);
-	if(!pipou->in_fd)
+	if (!pipou->in_fd)
 		error("Error !\n open input");
 	pipou->out_fd = open_output(argv[4]);
-	if(!pipou->out_fd)
+	if (!pipou->out_fd)
 		error("Error !\n open output");
 }
 
@@ -86,8 +86,8 @@ void	pipex(t_pipex *pipou, char **argv, char **envp)
 	char	*cmd1;
 	char	*cmd2;
 
-	cmd1 =  argv[2];
-	cmd2 =  argv[3];
+	cmd1 = argv[2];
+	cmd2 = argv[3];
 	if (pipe(pipou->fd) < 0)
 	{
 		close_fds(pipou);
