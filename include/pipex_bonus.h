@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:14:18 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/23 16:24:11 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/02/25 14:58:23 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ typedef struct s_pipex
 	int	fd[2];
 	int	in_fd;
 	int	out_fd;
+	int count_pipe;
+	char **cmd;
 
 }		t_pipex;
 
