@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:38:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/27 21:10:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/08 17:51:12 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ char	*find_path(char *arg, char **envp, int i)
 {
 	char	**path_arg;
 	char	*path;
-	char	*temp;
 
 	while (envp[i] && (ft_strncmp(envp[i], "PATH=", 5) != 0))
 		i++;
@@ -24,22 +23,23 @@ char	*find_path(char *arg, char **envp, int i)
 		return (NULL);
 	path_arg = ft_split(envp[i] + 5, ':');
 	i = 0;
-	while (path_arg && path_arg[i++])
+	while (path_arg != NULL && path_arg[i] && arg)
 	{
-		temp = ft_strjoin(path_arg[i], "/");
-		if (!temp)
-			return (NULL);
-		path = ft_strjoin(temp, arg);
-		free(temp);
+		path = get_a_path(path_arg[i], arg);
+		if (!path)
+			return (free_tab(path_arg), NULL);
 		if (access(path, X_OK) == 0)
 		{
 			free_tab(path_arg);
 			return (path);
 		}
 		free(path);
+		i++;
 	}
+	free_tab(path_arg);
 	return (NULL);
 }
+
 void	init_struct(t_pipex *pipou, char **argv, int argc)
 {
 	int	i;
@@ -57,7 +57,6 @@ void	init_struct(t_pipex *pipou, char **argv, int argc)
 	while (i <= argc - 2)
 	{
 		pipou->cmd[i - 2] = ft_strdup(argv[i]);
-		// printf("%s\n", pipou->cmd[i - 2]);
 		i++;
 	}
 	pipou->cmd[i - 2] = NULL;
@@ -65,7 +64,7 @@ void	init_struct(t_pipex *pipou, char **argv, int argc)
 	pipou->out_fd = open_output(argv[argc - 1]);
 }
 
-void	exec_cmd(char *cmd, char **envp)
+void	exec_cmd(char *cmd, char **envp, t_pipex *pipou)
 {
 	char	**args;
 	char	*path;
@@ -76,21 +75,22 @@ void	exec_cmd(char *cmd, char **envp)
 	if (!args)
 	{
 		free_tab(args);
-		write(2,"Error !\n split issues\n",23);
+		free_tab(pipou->cmd);
+		write(2, "Error !\n split issues\n", 23);
 		exit(EXIT_FAILURE);
 	}
 	path = find_path(args[0], envp, i);
 	if (!path)
 	{
 		free_tab(args);
-		write(2,"Error !\n command not found\n",28);
+		free_tab(pipou->cmd);
+		write(2, "Error !\n command not found\n", 28);
 		exit(EXIT_FAILURE);
 	}
 	execve(path, args, envp);
 	free_tab(args);
 	free(path);
-	perror("Error !\n execve");
-	exit(EXIT_FAILURE);
+	error("Error !\n execve", pipou);
 }
 
 void	pipex(t_pipex *pipou, char **envp, int i)
@@ -98,7 +98,7 @@ void	pipex(t_pipex *pipou, char **envp, int i)
 	pid_t	pid[pipou->count_cmd];
 	int		fd_pipes[pipou->count_cmd][2];
 
-	multiple_pipe(pipou,fd_pipes);
+	multiple_pipe(pipou, fd_pipes);
 	while (++i < pipou->count_cmd)
 	{
 		pid[i] = fork();
@@ -115,7 +115,7 @@ void	pipex(t_pipex *pipou, char **envp, int i)
 			else
 				dup2(fd_pipes[i][1], STDOUT_FILENO);
 			close_fds(pipou, fd_pipes);
-			exec_cmd(pipou->cmd[i], envp);
+			exec_cmd(pipou->cmd[i], envp, pipou);
 		}
 	}
 	free_tab(pipou->cmd);
@@ -126,15 +126,14 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	pipou;
 	pid_t	pid;
-	int i;
+	int		i;
 
 	i = -1;
 	pid = 0;
 	if (argc >= 5)
 	{
 		init_struct(&pipou, argv, argc);
-		pipex(&pipou, envp,i);
-
+		pipex(&pipou, envp, i);
 	}
 	else
 	{
@@ -143,6 +142,5 @@ int	main(int argc, char **argv, char **envp)
 	}
 	while (pid != -1)
 		pid = wait(NULL);
-
 	return (0);
 }

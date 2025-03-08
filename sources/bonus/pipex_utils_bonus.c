@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 10:13:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/27 20:52:15 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/08 17:25:44 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,23 +58,20 @@ int	error(const char *str, t_pipex *pipou)
 
 void	close_fds(t_pipex *pipou, int (*fd_pipes)[2])
 {
-	int j;
+	int	j;
 
 	j = 0;
 	while (j <= pipou->count_pipe)
 	{
-		if(fd_pipes[j][0] > 0 && fd_pipes[j][1] > 0)
+		if (fd_pipes[j][0] > 0 && fd_pipes[j][1] > 0)
 		{
 			close(fd_pipes[j][0]);
 			close(fd_pipes[j][1]);
 		}
 		j++;
 	}
-    if (pipou->in_fd > 0)
-        close(pipou->in_fd);
-    if (pipou->out_fd > 0)
-        close(pipou->out_fd);
-
+	if (pipou->in_fd > 0)
+		close(pipou->in_fd);
+	if (pipou->out_fd > 0)
+		close(pipou->out_fd);
 }
-
-

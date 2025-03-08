@@ -15,3 +15,5 @@ coucou 2
 coucou 3
 
 coucou 4
+
+valgrind --track-fds=yes --trace-children-skip=/bin/\*,/usr/bin/\* --show-leak-kinds=all --leak-check=full

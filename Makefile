@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2025/02/27 21:09:23 by tsaby            ###   ########.fr        #
+#    Updated: 2025/03/07 09:15:59 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,8 @@ SRCS_BONUS	:=	pipex_bonus.c	\
 #*------------------------------------------------------------------------------*
 
 SRCS_D		:=	sources/
+
+SRCS_B		:=	sources/bonus/
 
 OBJS_D		:=	objs/
 
@@ -81,11 +83,11 @@ $(NAME_B)	:	$(OBJS_B_D) $(OBJS_B) $(LIBFT_A) $(HEAD_BONUS)
 				@$(CC) $(CFLAGS) -o $(NAME_B) $(OBJS_B)  -Lft_ex $(LIBFT_A)
 				@echo "$(YELLOW)$(NAME_B) successfully built!$(NC)"
 
-$(OBJS)		:	$(OBJS_D)%.o: $(SRCS_D)%.c $(HEAD_BONUS)
+$(OBJS)		:	$(OBJS_D)%.o: $(SRCS_D)%.c $(HEAD)
 				@echo "$(YELLOW)Compiling $<, depends on $(HEAD)...$(NC)"
 				@$(CC) $(CFLAGS) -Iinclude -I$(LIBFT)/includes -c $< -o $@
 
-$(OBJS_B)	:	$(OBJS_B_D)%.o: $(SRCS_D)%.c $(HEAD)
+$(OBJS_B)	:	$(OBJS_B_D)%.o: $(SRCS_B)%.c $(HEAD_BONUS)
 				@echo "$(YELLOW)Compiling $<, depends on $(HEAD_BONUS)...$(NC)"
 				@$(CC) $(CFLAGS) -Iinclude -I$(LIBFT)/includes -c $< -o $@
 
