@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:38:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/27 17:10:17 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/08 16:27:55 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ char	*find_path(char *arg, char **envp, int i)
 {
 	char	**path_arg;
 	char	*path;
-	char	*temp;
 
 	while (envp[i] && (ft_strncmp(envp[i], "PATH=", 5) != 0))
 		i++;
@@ -24,20 +23,20 @@ char	*find_path(char *arg, char **envp, int i)
 		return (NULL);
 	path_arg = ft_split(envp[i] + 5, ':');
 	i = 0;
-	while (path_arg && path_arg[i++])
+	while (path_arg != NULL && path_arg[i] && arg)
 	{
-		temp = ft_strjoin(path_arg[i], "/");
-		if (!temp)
-			return (NULL);
-		path = ft_strjoin(temp, arg);
-		free(temp);
+		path = get_a_path(path_arg[i], arg);
+		if (!path)
+			return (free_tab(path_arg), NULL);
 		if (access(path, X_OK) == 0)
 		{
 			free_tab(path_arg);
 			return (path);
 		}
 		free(path);
+		i++;
 	}
+	free_tab(path_arg);
 	return (NULL);
 }
 
@@ -45,6 +44,7 @@ void	init_struct(t_pipex *pipou, char **argv)
 {
 	pipou->cmd1 = argv[2];
 	pipou->cmd2 = argv[3];
+	pipou->error = 0;
 	pipou->in_fd = open_input(argv[1]);
 	pipou->out_fd = open_output(argv[4]);
 }
@@ -60,14 +60,14 @@ void	exec_cmd(char *cmd, char **envp)
 	if (!args)
 	{
 		free_tab(args);
-		write(2,"Error !\n split issues\n",23);
+		write(2, "Error !\nsplit issues\n", 22);
 		exit(EXIT_FAILURE);
 	}
 	path = find_path(args[0], envp, i);
 	if (!path)
 	{
 		free_tab(args);
-		write(2,"Error !\n command not found\n",28);
+		write(2, "Error !\ncommand not found\n", 27);
 		exit(EXIT_FAILURE);
 	}
 	execve(path, args, envp);
@@ -84,7 +84,7 @@ void	pipe_and_fork(t_pipex *pipou, char **envp)
 	if (pipe(pipou->fd) < 0)
 	{
 		close_fds(pipou);
-		error("Error !\n Pipe");
+		error("Error !\nPipe\n");
 	}
 	if (pipou->in_fd > 0)
 	{
@@ -96,6 +96,8 @@ void	pipe_and_fork(t_pipex *pipou, char **envp)
 		pid2 = fork();
 		child_last(pid2, pipou, envp);
 	}
+	else
+		pipou->error = 1;
 	close_fds(pipou);
 }
 
@@ -118,5 +120,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	while (pid != -1)
 		pid = wait(NULL);
+	if (pipou.error == 1)
+		return (1);
 	return (0);
 }

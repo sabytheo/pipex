@@ -1,0 +1,10 @@
+42_pipex_tester
+include
+infile.txt
+Libft
+Makefile
+objs_bonus
+outfile.txt
+pipex_bonus
+README.md
+sources

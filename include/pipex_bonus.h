@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:14:18 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/27 21:03:09 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/08 17:24:04 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ void		close_fds(t_pipex *pipou, int (*fd_pipes)[2]);
 int			open_input(char *file1);
 int			open_output(char *file2);
 void		multiple_pipe(t_pipex *pipou, int (*fd_pipes)[2]);
+char	*get_a_path(char *path_arg, char *arg);
 
 #endif

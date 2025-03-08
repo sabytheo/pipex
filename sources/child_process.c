@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:08:56 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/26 15:28:56 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/07 17:24:58 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,22 @@ void	child_last(pid_t pid, t_pipex *pipou, char **envp)
 		close_fds(pipou);
 		exec_cmd(pipou->cmd2, envp);
 	}
+}
+
+char	*get_a_path(char *path_arg, char *arg)
+{
+	char	*temp;
+	char	*path;
+
+	temp = ft_strjoin(path_arg, "/");
+	if (!temp)
+		return (NULL);
+	path = ft_strjoin(temp, arg);
+	if (!path)
+	{
+		free(temp);
+		return (NULL);
+	}
+	free(temp);
+	return (path);
 }

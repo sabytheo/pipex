@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:14:18 by tsaby             #+#    #+#             */
-/*   Updated: 2025/02/27 16:19:01 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/08 15:35:28 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_pipex
 	int		out_fd;
 	char	*cmd1;
 	char	*cmd2;
+	int		error;
 
 }			t_pipex;
 
@@ -42,5 +43,6 @@ int			open_output(char *file2);
 void		child_first(pid_t pid, t_pipex *pipou, char **envp);
 void		child_last(pid_t pid, t_pipex *pipou, char **envp);
 void		exec_cmd(char *cmd, char **envp);
+char		*get_a_path(char *path_arg, char *arg);
 
 #endif
