@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2025/03/07 09:15:59 by tsaby            ###   ########.fr        #
+#    Updated: 2025/03/09 13:00:15 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,7 +80,7 @@ $(NAME)		:	$(OBJS_D) $(OBJS) $(LIBFT_A) $(HEAD)
 				@echo "$(YELLOW)$(NAME) successfully built!$(NC)"
 
 $(NAME_B)	:	$(OBJS_B_D) $(OBJS_B) $(LIBFT_A) $(HEAD_BONUS)
-				@$(CC) $(CFLAGS) -o $(NAME_B) $(OBJS_B)  -Lft_ex $(LIBFT_A)
+				@$(CC)  -o $(NAME_B) $(OBJS_B)  -Lft_ex $(LIBFT_A)
 				@echo "$(YELLOW)$(NAME_B) successfully built!$(NC)"
 
 $(OBJS)		:	$(OBJS_D)%.o: $(SRCS_D)%.c $(HEAD)

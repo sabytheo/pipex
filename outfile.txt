@@ -1,10 +1,9 @@
-42_pipex_tester
-include
-infile.txt
 Libft
 Makefile
+README.md
+include
+infile.txt
 objs_bonus
 outfile.txt
 pipex_bonus
-README.md
 sources
