@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:38:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/03/11 11:55:24 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/11 12:05:30 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	exec_cmd(char *cmd, char **envp, t_pipex *pipex)
 	error("Error !\n execve", pipex);
 }
 
-void	pipex(t_pipex *pipex, char **envp, int i)
+void	pipex_main(t_pipex *pipex, char **envp, int i)
 {
 	multiple_pipe(pipex, pipex->fd_pipes);
 	while (++i < pipex->count_cmd)
@@ -129,7 +129,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc >= 5)
 	{
 		init_struct(&pipex, argv, argc);
-		pipex(&pipex, envp, i);
+		pipex_main(&pipex, envp, i);
 	}
 	else
 	{
