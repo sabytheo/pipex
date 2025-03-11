@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:38:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/03/08 16:27:55 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/11 11:55:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ char	*find_path(char *arg, char **envp, int i)
 	return (NULL);
 }
 
-void	init_struct(t_pipex *pipou, char **argv)
+void	init_struct(t_pipex *pipex, char **argv)
 {
-	pipou->cmd1 = argv[2];
-	pipou->cmd2 = argv[3];
-	pipou->error = 0;
-	pipou->in_fd = open_input(argv[1]);
-	pipou->out_fd = open_output(argv[4]);
+	pipex->cmd1 = argv[2];
+	pipex->cmd2 = argv[3];
+	pipex->error = 0;
+	pipex->in_fd = open_input(argv[1]);
+	pipex->out_fd = open_output(argv[4]);
 }
 
 void	exec_cmd(char *cmd, char **envp)
@@ -76,42 +76,42 @@ void	exec_cmd(char *cmd, char **envp)
 	error("Error !\n execve");
 }
 
-void	pipe_and_fork(t_pipex *pipou, char **envp)
+void	pipe_and_fork(t_pipex *pipex, char **envp)
 {
 	pid_t	pid;
 	pid_t	pid2;
 
-	if (pipe(pipou->fd) < 0)
+	if (pipe(pipex->fd) < 0)
 	{
-		close_fds(pipou);
+		close_fds(pipex);
 		error("Error !\nPipe\n");
 	}
-	if (pipou->in_fd > 0)
+	if (pipex->in_fd > 0)
 	{
 		pid = fork();
-		child_first(pid, pipou, envp);
+		child_first(pid, pipex, envp);
 	}
-	if (pipou->out_fd > 0)
+	if (pipex->out_fd > 0)
 	{
 		pid2 = fork();
-		child_last(pid2, pipou, envp);
+		child_last(pid2, pipex, envp);
 	}
 	else
-		pipou->error = 1;
-	close_fds(pipou);
+		pipex->error = 1;
+	close_fds(pipex);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_pipex	pipou;
+	t_pipex	pipex;
 	pid_t	pid;
 
 	pid = 0;
 	if (argc == 5)
 	{
-		init_struct(&pipou, argv);
-		pipe_and_fork(&pipou, envp);
-		close_fds(&pipou);
+		init_struct(&pipex, argv);
+		pipe_and_fork(&pipex, envp);
+		close_fds(&pipex);
 	}
 	else
 	{
@@ -120,7 +120,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	while (pid != -1)
 		pid = wait(NULL);
-	if (pipou.error == 1)
+	if (pipex.error == 1)
 		return (1);
 	return (0);
 }

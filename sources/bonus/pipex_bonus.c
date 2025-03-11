@@ -6,13 +6,13 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:38:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/03/09 13:40:39 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/11 11:55:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-char	*find_path(char *arg, char **envp, int i, t_pipex *pipou)
+char	*find_path(char *arg, char **envp, int i, t_pipex *pipex)
 {
 	char	*path;
 
@@ -20,108 +20,107 @@ char	*find_path(char *arg, char **envp, int i, t_pipex *pipou)
 		i++;
 	if (!envp[i])
 		return (NULL);
-	pipou->path_arg = ft_split(envp[i] + 5, ':');
+	pipex->path_arg = ft_split(envp[i] + 5, ':');
 	i = 0;
-	while (pipou->path_arg != NULL && pipou->path_arg[i] && arg)
+	while (pipex->path_arg != NULL && pipex->path_arg[i] && arg)
 	{
-		path = get_a_path(pipou->path_arg[i], arg);
+		path = get_a_path(pipex->path_arg[i], arg);
 		if (!path)
-			return (free_all(pipou, 0), NULL);
+			return (free_all(pipex, 0), NULL);
 		if (access(path, X_OK) == 0)
 		{
-			free_tab(pipou->path_arg);
+			free_tab(pipex->path_arg);
 			return (path);
 		}
 		free(path);
 		i++;
 	}
-	free_all(pipou, 0);
+	free_all(pipex, 0);
 	return (NULL);
 }
 
-void	init_struct(t_pipex *pipou, char **argv, int argc)
+void	init_struct(t_pipex *pipex, char **argv, int argc)
 {
 	int	i;
 
-	pipou->args = NULL;
-	pipou->path_arg = NULL;
-	pipou->count_cmd = argc - 3;
-	pipou->count_pipe = pipou->count_cmd - 1;
+	pipex->args = NULL;
+	pipex->path_arg = NULL;
+	pipex->count_cmd = argc - 3;
+	pipex->count_pipe = pipex->count_cmd - 1;
 	i = 2;
-	pipou->cmd = (char **)malloc(sizeof(char *) * (pipou->count_cmd + 1));
-	if (!pipou->cmd)
+	pipex->cmd = (char **)malloc(sizeof(char *) * (pipex->count_cmd + 1));
+	if (!pipex->cmd)
 	{
-		close(7);
 		write(2, "Error !\n malloc failed\n", 24);
 		exit(EXIT_FAILURE);
 	}
 	while (i <= argc - 2)
 	{
-		pipou->cmd[i - 2] = ft_strdup(argv[i]);
+		pipex->cmd[i - 2] = ft_strdup(argv[i]);
 		i++;
 	}
-	pipou->cmd[i - 2] = NULL;
-	pipou->in_fd = open_input(argv[1]);
-	pipou->out_fd = open_output(argv[argc - 1]);
-	init_pipe(pipou);
+	pipex->cmd[i - 2] = NULL;
+	pipex->in_fd = open_input(argv[1]);
+	pipex->out_fd = open_output(argv[argc - 1]);
+	init_pipe(pipex);
 }
 
-void	exec_cmd(char *cmd, char **envp, t_pipex *pipou)
+void	exec_cmd(char *cmd, char **envp, t_pipex *pipex)
 {
 	char	*path;
 	int		i;
 
 	i = 0;
-	pipou->args = ft_split(cmd, ' ');
-	if (!pipou->args)
+	pipex->args = ft_split(cmd, ' ');
+	if (!pipex->args)
 	{
 		write(2, "Error !\n split issues\n", 23);
 		exit(EXIT_FAILURE);
 	}
-	path = find_path(pipou->args[0], envp, i, pipou);
+	path = find_path(pipex->args[0], envp, i, pipex);
 	if (!path)
 	{
 		write(2, "Error !\n command not found\n", 28);
 		exit(EXIT_FAILURE);
 	}
-	execve(path, pipou->args, envp);
-	free_all(pipou, 0);
+	execve(path, pipex->args, envp);
+	free_all(pipex, 0);
 	free(path);
-	error("Error !\n execve", pipou);
+	error("Error !\n execve", pipex);
 }
 
-void	pipex(t_pipex *pipou, char **envp, int i)
+void	pipex(t_pipex *pipex, char **envp, int i)
 {
-	multiple_pipe(pipou, pipou->fd_pipes);
-	while (++i < pipou->count_cmd)
+	multiple_pipe(pipex, pipex->fd_pipes);
+	while (++i < pipex->count_cmd)
 	{
-		if ((i == 0 && pipou->in_fd < 0) || (i == pipou->count_pipe
-				&& pipou->out_fd < 0))
+		if ((i == 0 && pipex->in_fd < 0) || (i == pipex->count_pipe
+				&& pipex->out_fd < 0))
 			continue ;
-		pipou->pid[i] = fork();
-		if (pipou->pid[i] < 0)
-			error("Error !\n Fork", pipou);
-		if (pipou->pid[i] == 0)
+		pipex->pid[i] = fork();
+		if (pipex->pid[i] < 0)
+			error("Error !\n Fork", pipex);
+		if (pipex->pid[i] == 0)
 		{
 			if (i == 0)
-				dup2(pipou->in_fd, STDIN_FILENO);
+				dup2(pipex->in_fd, STDIN_FILENO);
 			else
-				dup2(pipou->fd_pipes[i - 1][0], STDIN_FILENO);
-			if (i == pipou->count_pipe)
-				dup2(pipou->out_fd, STDOUT_FILENO);
+				dup2(pipex->fd_pipes[i - 1][0], STDIN_FILENO);
+			if (i == pipex->count_pipe)
+				dup2(pipex->out_fd, STDOUT_FILENO);
 			else
-				dup2(pipou->fd_pipes[i][1], STDOUT_FILENO);
-			close_fds(pipou, pipou->fd_pipes);
-			exec_cmd(pipou->cmd[i], envp, pipou);
+				dup2(pipex->fd_pipes[i][1], STDOUT_FILENO);
+			close_fds(pipex, pipex->fd_pipes);
+			exec_cmd(pipex->cmd[i], envp, pipex);
 		}
 	}
-	close_fds(pipou, pipou->fd_pipes);
-	free_all(pipou, 0);
+	close_fds(pipex, pipex->fd_pipes);
+	free_all(pipex, 0);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_pipex	pipou;
+	t_pipex	pipex;
 	pid_t	pid;
 	int		i;
 
@@ -129,8 +128,8 @@ int	main(int argc, char **argv, char **envp)
 	pid = 0;
 	if (argc >= 5)
 	{
-		init_struct(&pipou, argv, argc);
-		pipex(&pipou, envp, i);
+		init_struct(&pipex, argv, argc);
+		pipex(&pipex, envp, i);
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 10:13:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/03/07 17:58:25 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/11 11:55:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ int	error(const char *str)
 	exit(EXIT_FAILURE);
 }
 
-void	close_fds(t_pipex *pipou)
+void	close_fds(t_pipex *pipex)
 {
-	if (pipou->in_fd > 0)
-		close(pipou->in_fd);
-	if (pipou->out_fd > 0)
-		close(pipou->out_fd);
-	if (pipou->fd[0] > 0)
-		close(pipou->fd[0]);
-	if (pipou->fd[1] > 0)
-		close(pipou->fd[1]);
+	if (pipex->in_fd > 0)
+		close(pipex->in_fd);
+	if (pipex->out_fd > 0)
+		close(pipex->out_fd);
+	if (pipex->fd[0] > 0)
+		close(pipex->fd[0]);
+	if (pipex->fd[1] > 0)
+		close(pipex->fd[1]);
 }
