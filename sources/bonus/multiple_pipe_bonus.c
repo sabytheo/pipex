@@ -6,23 +6,23 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 21:09:26 by tsaby             #+#    #+#             */
-/*   Updated: 2025/03/09 13:37:33 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/11 11:55:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	multiple_pipe(t_pipex *pipou, int (*fd_pipes)[2])
+void	multiple_pipe(t_pipex *pipex, int (*fd_pipes)[2])
 {
 	int	i;
 
 	i = 0;
-	while (i < pipou->count_cmd)
+	while (i < pipex->count_cmd)
 	{
 		if (pipe(fd_pipes[i]) == -1)
 		{
-			free_all(pipou, 0);
-			error("Error !\n Pipes ", pipou);
+			free_all(pipex, 0);
+			error("Error !\n Pipes ", pipex);
 		}
 		i++;
 	}
@@ -46,20 +46,20 @@ char	*get_a_path(char *path_arg, char *arg)
 	return (path);
 }
 
-void	init_pipe(t_pipex *pipou)
+void	init_pipe(t_pipex *pipex)
 {
-	pipou->pid = malloc(sizeof(pid_t) * pipou->count_cmd);
-	if (!pipou->pid)
+	pipex->pid = malloc(sizeof(pid_t) * pipex->count_cmd);
+	if (!pipex->pid)
 	{
 		write(2, "Error !\nMalloc issues\n", 22);
-		free_all(pipou, 0);
+		free_all(pipex, 0);
 		exit(EXIT_FAILURE);
 	}
-	pipou->fd_pipes = malloc(sizeof(int [2]) * pipou->count_cmd);
-	if (!pipou->fd_pipes)
+	pipex->fd_pipes = malloc(sizeof(int [2]) * pipex->count_cmd);
+	if (!pipex->fd_pipes)
 	{
-		close_fds(pipou, pipou->fd_pipes);
-		error("Error !\n Malloc", pipou);
+		close_fds(pipex, pipex->fd_pipes);
+		error("Error !\n Malloc", pipex);
 	}
 }
 

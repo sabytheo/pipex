@@ -1,9 +1,19 @@
-Libft
-Makefile
-README.md
-include
-infile.txt
-objs_bonus
-outfile.txt
-pipex_bonus
-sources
+Bonjour, ceci est un test de pipex.
+Ce fichier contient plusieurs lignes.
+Certaines lignes contiennent des nombres : 42, 1337, 2025.
+D'autres lignes sont répétées.
+D'autres lignes sont répétées.
+On peut aussi tester la redirection avec grep, wc, tr, etc.
+error: ceci est un message d'erreur simulé.
+
+
+coucou
+
+
+coucou 2
+
+coucou 3
+
+coucou 4
+
+valgrind --track-fds=yes --trace-children-skip=/bin/\*,/usr/bin/\* --show-leak-kinds=all --leak-check=full

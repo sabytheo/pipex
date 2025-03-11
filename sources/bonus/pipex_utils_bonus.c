@@ -6,38 +6,38 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 10:13:57 by tsaby             #+#    #+#             */
-/*   Updated: 2025/03/09 13:37:16 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/11 11:55:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	free_all(t_pipex *pipou, int i)
+void	free_all(t_pipex *pipex, int i)
 {
-	if (pipou->cmd)
+	if (pipex->cmd)
 	{
-		while (pipou->cmd[i])
-			free(pipou->cmd[i++]);
-		free(pipou->cmd);
+		while (pipex->cmd[i])
+			free(pipex->cmd[i++]);
+		free(pipex->cmd);
 	}
 	i = 0;
-	if (pipou->args)
+	if (pipex->args)
 	{
-		while (pipou->args[i])
-			free(pipou->args[i++]);
-		free(pipou->args);
+		while (pipex->args[i])
+			free(pipex->args[i++]);
+		free(pipex->args);
 	}
 	i = 0;
-	if (pipou->path_arg)
+	if (pipex->path_arg)
 	{
-		while (pipou->path_arg[i])
-			free(pipou->path_arg[i++]);
-		free(pipou->path_arg);
+		while (pipex->path_arg[i])
+			free(pipex->path_arg[i++]);
+		free(pipex->path_arg);
 	}
-	if (pipou->pid)
-		free(pipou->pid);
-	if (pipou->fd_pipes)
-		free(pipou->fd_pipes);
+	if (pipex->pid)
+		free(pipex->pid);
+	if (pipex->fd_pipes)
+		free(pipex->fd_pipes);
 }
 
 int	open_input(char *file1)
@@ -64,29 +64,26 @@ int	open_output(char *file2)
 	return (fd);
 }
 
-int	error(const char *str, t_pipex *pipou)
+int	error(const char *str, t_pipex *pipex)
 {
 	perror(str);
-	free_all(pipou, 0);
+	free_all(pipex, 0);
 	exit(EXIT_FAILURE);
 }
 
-void	close_fds(t_pipex *pipou, int (*fd_pipes)[2])
+void	close_fds(t_pipex *pipex, int (*fd_pipes)[2])
 {
 	int	j;
-	int	fd;
 
 	j = 0;
-	fd = 7;
-	close(fd);
-	while (j <= pipou->count_pipe)
+	while (j <= pipex->count_pipe)
 	{
 		close(fd_pipes[j][0]);
 		close(fd_pipes[j][1]);
 		j++;
 	}
-	if (pipou->in_fd > 0)
-		close(pipou->in_fd);
-	if (pipou->out_fd > 0)
-		close(pipou->out_fd);
+	if (pipex->in_fd > 0)
+		close(pipex->in_fd);
+	if (pipex->out_fd > 0)
+		close(pipex->out_fd);
 }

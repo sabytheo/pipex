@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 13:14:18 by tsaby             #+#    #+#             */
-/*   Updated: 2025/03/09 13:14:09 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/11 11:55:24 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ typedef struct s_pipex
 
 }			t_pipex;
 
-int			error(const char *str, t_pipex *pipou);
-void		free_all(t_pipex *pipou, int i);
-void		close_fds(t_pipex *pipou, int (*fd_pipes)[2]);
+int			error(const char *str, t_pipex *pipex);
+void		free_all(t_pipex *pipex, int i);
+void		close_fds(t_pipex *pipex, int (*fd_pipes)[2]);
 int			open_input(char *file1);
 int			open_output(char *file2);
-void		multiple_pipe(t_pipex *pipou, int (*fd_pipes)[2]);
+void		multiple_pipe(t_pipex *pipex, int (*fd_pipes)[2]);
 char		*get_a_path(char *path_arg, char *arg);
 void	free_tab(char **tab);
-void	init_pipe(t_pipex *pipou);
+void	init_pipe(t_pipex *pipex);
 
 #endif
