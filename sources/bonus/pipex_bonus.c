@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:38:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/03/11 12:05:30 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/18 16:26:16 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	*find_path(char *arg, char **envp, int i, t_pipex *pipex)
 		i++;
 	if (!envp[i])
 		return (NULL);
+	if (access(arg, X_OK) == 0)
+		return (arg);
 	pipex->path_arg = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (pipex->path_arg != NULL && pipex->path_arg[i] && arg)

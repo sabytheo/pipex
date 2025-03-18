@@ -6,7 +6,7 @@
 /*   By: tsaby <tsaby@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:38:19 by tsaby             #+#    #+#             */
-/*   Updated: 2025/03/11 11:55:24 by tsaby            ###   ########.fr       */
+/*   Updated: 2025/03/18 16:26:02 by tsaby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ char	*find_path(char *arg, char **envp, int i)
 		i++;
 	if (!envp[i])
 		return (NULL);
+	if (access(arg, X_OK) == 0)
+		return (arg);
 	path_arg = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (path_arg != NULL && path_arg[i] && arg)
 	{
-		path = get_a_path(path_arg[i], arg);
+		path = get_a_path(path_arg[i++], arg);
 		if (!path)
 			return (free_tab(path_arg), NULL);
 		if (access(path, X_OK) == 0)
@@ -34,7 +36,6 @@ char	*find_path(char *arg, char **envp, int i)
 			return (path);
 		}
 		free(path);
-		i++;
 	}
 	free_tab(path_arg);
 	return (NULL);
